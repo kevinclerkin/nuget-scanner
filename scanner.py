@@ -1,6 +1,5 @@
 import zipfile
 import os
-import sys
 import requests
 import xml.etree.ElementTree as ET
 
@@ -40,8 +39,8 @@ def check_vulnerabilities(package_id, package_version):
         print(f"Error: {e}")
 
 
-def scan_nuget_packages():
-   nuget_packages_dir = 'nuget_packages'
+def scan_nuget_packages(working_directory):
+   nuget_packages_dir = os.path.join(working_directory, 'nuget_packages')
    for root, dirs, files in os.walk(nuget_packages_dir):
         for file in files:
             if file.endswith(".nupkg"):
@@ -53,7 +52,8 @@ def scan_nuget_packages():
                     print(f"Failed to extract package metadata for {package_path}.")
 
 def main():
-    scan_nuget_packages()
+    working_directory = os.getenv('WORKING_DIRECTORY', './')
+    scan_nuget_packages(working_directory)
 
 if __name__ == "__main__":
     main()    
