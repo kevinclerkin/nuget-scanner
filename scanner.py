@@ -38,3 +38,11 @@ def check_vulnerabilities(package_id, package_version):
             print(f"Failed to retrieve data: HTTP {response.status_code}")
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
+
+
+def scan_nuget_package(package_path):
+    package_id, package_version = get_nuspec_metadata(package_path)
+    if package_id and package_version:
+        check_vulnerabilities(package_id, package_version)
+    else:
+        print("Failed to extract package metadata.")       
