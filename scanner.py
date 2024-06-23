@@ -45,4 +45,14 @@ def scan_nuget_package(package_path):
     if package_id and package_version:
         check_vulnerabilities(package_id, package_version)
     else:
-        print("Failed to extract package metadata.")       
+        print("Failed to extract package metadata.") 
+
+def main():
+    if len(sys.argv) != 2:
+        print("nuget-scanner")
+        sys.exit(1)
+    package_path = sys.argv[1]
+    scan_nuget_package(package_path)
+
+if __name__ == "__main__":
+    main()    
