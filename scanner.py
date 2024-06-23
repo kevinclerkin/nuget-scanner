@@ -40,19 +40,20 @@ def check_vulnerabilities(package_id, package_version):
         print(f"Error: {e}")
 
 
-def scan_nuget_package(package_path):
-    package_id, package_version = get_nuspec_metadata(package_path)
-    if package_id and package_version:
-        check_vulnerabilities(package_id, package_version)
-    else:
-        print("Failed to extract package metadata.") 
+def scan_nuget_packages():
+   nuget_packages_dir = 'nuget_packages'
+   for root, dirs, files in os.walk(nuget_packages_dir):
+        for file in files:
+            if file.endswith(".nupkg"):
+                package_path = os.path.join(root, file)
+                package_id, package_version = get_nuspec_metadata(package_path)
+                if package_id and package_version:
+                    check_vulnerabilities(package_id, package_version)
+                else:
+                    print(f"Failed to extract package metadata for {package_path}.")
 
 def main():
-    if len(sys.argv) != 2:
-        print("nuget-scanner")
-        sys.exit(1)
-    package_path = sys.argv[1]
-    scan_nuget_package(package_path)
+    scan_nuget_packages()
 
 if __name__ == "__main__":
     main()    
