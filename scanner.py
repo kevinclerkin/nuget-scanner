@@ -15,3 +15,26 @@ def get_nuspec_metadata(package_path):
                     package_version = root.find('.//version').text.strip()
                     return package_id, package_version
     return None, None
+
+def check_vulnerabilities(package_id, package_version):
+    base_url = 'https://services.nvd.nist.gov/rest/json/cves/1.0'
+    url = f'{base_url}?keyword={package_id} {package_version}'
+    
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            if 'result' in data:
+                vulnerabilities = data['result']['CVE_Items']
+                if vulnerabilities:
+                    print(f"Vulnerabilities found for {package_id} {package_version}:")
+                    for vuln in vulnerabilities:
+                        print(f"- {vuln['cve']['CVE_data_meta']['ID']}: {vuln['cve']['description']['description_data'][0]['value']}")
+                else:
+                    print(f"No vulnerabilities found for {package_id} {package_version}")
+            else:
+                print(f"No results found for {package_id} {package_version}")
+        else:
+            print(f"Failed to retrieve data: HTTP {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
