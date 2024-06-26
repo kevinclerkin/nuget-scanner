@@ -48,3 +48,24 @@ def test_check_vulnerabilities(mock_get):
     
     check_vulnerabilities(package_id, package_version)
     assert mock_get.called
+
+def test_scan_nuget_packages(tmp_path):
+    nuget_dir = tmp_path / "nuget_packages"
+    nuget_dir.mkdir()
+
+    nuspec_content = '''<?xml version="1.0"?>
+                        <package>
+                            <metadata>
+                                <id>TestPackage</id>
+                                <version>1.0.0</version>
+                            </metadata>
+                        </package>'''
+    nupkg_path = nuget_dir / "test_package.nupkg"
+    create_mock_nupkg(nupkg_path, nuspec_content)
+
+    with patch('nuget_scanner.scanner.check_vulnerabilities') as mock_check_vulns:
+        scan_nuget_packages(str(tmp_path))
+        assert mock_check_vulns.called
+
+if __name__ == "__main__":
+    pytest.main()
