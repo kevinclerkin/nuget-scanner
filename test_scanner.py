@@ -3,7 +3,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 from unittest.mock import patch, MagicMock
 import pytest
-from scanner import get_nuspec_metadata, check_vulnerabilities, scan_nuget_packages
+from nuget_scanner import get_nuspec_metadata, check_vulnerabilities, scan_nuget_packages
 
 def create_mock_nupkg(file_path, nuspec_content):
     with zipfile.ZipFile(file_path, 'w') as zf:
@@ -63,7 +63,7 @@ def test_scan_nuget_packages(tmp_path):
     nupkg_path = nuget_dir / "test_package.nupkg"
     create_mock_nupkg(nupkg_path, nuspec_content)
 
-    with patch('nuget_scanner.scanner.check_vulnerabilities') as mock_check_vulns:
+    with patch('nuget_scanner.check_vulnerabilities') as mock_check_vulns:
         scan_nuget_packages(str(tmp_path))
         assert mock_check_vulns.called
 
