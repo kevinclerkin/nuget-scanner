@@ -12,7 +12,7 @@ setup(
             'nuget-scanner = nuget_scanner:main',
         ],
     },
-    author='Kevin Clerkin',  # Replace with your name
+    author='Kevin Clerkin',
     description='A tool to scan NuGet packages for vulnerabilities',  
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
