@@ -12,4 +12,15 @@ setup(
             'nuget-scanner = nuget_scanner:main',
         ],
     },
+    author='Kevin Clerkin',  # Replace with your name
+    description='A tool to scan NuGet packages for vulnerabilities',  
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    url='https://github.com/kevinclerkin/nuget-scanner',
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+    ],
+    python_requires='>=3.6',
 )
