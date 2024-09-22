@@ -28,20 +28,18 @@ def check_vulnerabilities(package_id, package_version):
     
     try:
         response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            if 'result' in data:
-                vulnerabilities = data['result']['CVE_Items']
-                if vulnerabilities:
-                    logging.info(f"Vulnerabilities found for {package_id} {package_version}:")
-                    for vuln in vulnerabilities:
-                        logging.info(f"- {vuln['cve']['CVE_data_meta']['ID']}: {vuln['cve']['description']['description_data'][0]['value']}")
-                else:
-                    logging.info(f"No vulnerabilities found for {package_id} {package_version}")
+        response.raise_for_status()
+        data = response.json()
+        if 'result' in data:
+            vulnerabilities = data['result']['CVE_Items']
+            if vulnerabilities:
+                logging.info(f"Vulnerabilities found for {package_id} {package_version}:")
+                for vuln in vulnerabilities:
+                    logging.info(f"- {vuln['cve']['CVE_data_meta']['ID']}: {vuln['cve']['description']['description_data'][0]['value']}")
             else:
-                logging.warning(f"No results found for {package_id} {package_version}")
+                logging.info(f"No vulnerabilities found for {package_id} {package_version}")
         else:
-            logging.error(f"Failed to retrieve data: HTTP {response.status_code}")
+            logging.warning(f"No results found for {package_id} {package_version}")
     except requests.exceptions.RequestException as e:
         logging.error(f"Request error: {e}")
 
@@ -59,6 +57,9 @@ def scan_nuget_packages(working_directory):
         for file in files:
             if file.endswith(".nupkg"):
                 package_path = os.path.join(root, file)
+                if os.path.getsize(package_path) == 0:
+                    logging.warning(f"Empty package file: {package_path}")
+                    continue
                 package_id, package_version = get_nuspec_metadata(package_path)
                 if package_id and package_version:
                     check_vulnerabilities(package_id, package_version)
@@ -70,7 +71,12 @@ def main():
     parser.add_argument("working_directory", help="The directory where NuGet packages are located.")
     args = parser.parse_args()
 
+    if not os.path.isdir(args.working_directory):
+        logging.error(f"Invalid directory: {args.working_directory}")
+        return
+
     scan_nuget_packages(args.working_directory)
 
 if __name__ == "__main__":
     main()
+
