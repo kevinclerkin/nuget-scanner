@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'nuget-scanner = nuget_scanner:main',
+            'nuget-scanner = nuget-scanner.nuget_scanner:main',
         ],
     },
     author='Kevin Clerkin',

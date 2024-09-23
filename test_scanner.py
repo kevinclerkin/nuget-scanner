@@ -1,4 +1,3 @@
-import os
 import zipfile
 import xml.etree.ElementTree as ET
 from unittest.mock import patch, MagicMock
