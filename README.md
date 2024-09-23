@@ -7,11 +7,4 @@ A command-line tool to scan NuGet packages for security vulnerabilities. Extract
 - Scans `.nupkg` files in a specified directory.
 - Retrieves and parses `.nuspec` files to extract package metadata.
 - Checks for vulnerabilities based on package ID and version.
-- Provides logging for easy debugging and tracking.
-
-## Installation
-
-You can install the `nuget-scanner` package via pip:
-
-```bash
-pip install nuget-scanner
+- Provides logging for easy debugging and tracking
